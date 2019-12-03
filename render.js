@@ -109,6 +109,7 @@ export const cancelSignUp = function(event) {
 }
 
 export const completeAthleteSignUp = async function(event) {
+    event.preventDefault();
 
     let pass = $(event.target).closest(".container").find(".pswInput")[0].value;
     let tomatch = $(event.target).closest(".container").find(".pswInputMatch")[0].value;
@@ -117,7 +118,8 @@ export const completeAthleteSignUp = async function(event) {
 
     let response = [0];
     
-    if (pass == tomatch && pass != "") {
+    if (pass == tomatch && pass != "" && athleteName != "" && username != "") {
+
         try {
             response = await axios({
                 method: 'POST',
@@ -130,21 +132,26 @@ export const completeAthleteSignUp = async function(event) {
                     }    
                 }
             });
+            console.log(response.status);
+            
         } catch (error) {
             console.log(error);
         }
-        console.log(response);
-        loadCoachPg2(event, response)
-    } else if (pass != tomatch) {
-        alert("passwords do not match");
-        signUp(event)
+       
+        //loadCoachPg2(event, response)
+    } else { 
+        if (pass != tomatch) {
+            alert("passwords do not match");
+        } else {
+            alert("complete all fields");
+        }
     }
-     
-    
     
 }
 
 export const completeCoachSignUp = async function(event) {
+    event.preventDefault();
+
 
     let pass = $(event.target).closest(".container").find(".pswInput")[0].value;
     let tomatch = $(event.target).closest(".container").find(".pswInputMatch")[0].value;
@@ -153,7 +160,7 @@ export const completeCoachSignUp = async function(event) {
 
     let response = [0];
     
-    if (pass == tomatch && pass != "") {
+    if (pass == tomatch && pass != "" && clubName != "" && username != "") {
         try {
             response = await axios({
                 method: 'POST',
@@ -166,41 +173,49 @@ export const completeCoachSignUp = async function(event) {
                     }    
                 }
             });
+
         } catch (error) {
             console.log(error);
         }
-        console.log(response);
-        loadCoachPg2(event, response)
-    } else if (pass != tomatch) {
-        alert("passwords do not match");
-        signUp(event)
+   
+        //loadCoachPg2(event, response)
+    } else { 
+        if (pass != tomatch) {
+            alert("passwords do not match");
+        } else {
+            alert("complete all fields");
+        }
     }
     
 }
 
 export const toLogin = async function(event) {
+    event.preventDefault();
+
     
     let psw = $(event.target).closest(".container").find(".logpsw")[0].value;
     let username = $(event.target).closest(".container").find(".logusr")[0].value;
 
-    try {
-        console.log("h:")
-        const response = await axios({
-            method: 'POST',
-            url: "http://localhost:3000/account/login",
-            data: {
-                "name": username,
-                "pass": psw,   
-            }
-        });
-        console.log("s")
-        console.log(response)
-    } catch (error) {
-        console.log("e")
-        console.log(error);
+    if (username != "" && psw != "") {
+        try {
+            console.log("h:")
+            const response = await axios({
+                method: 'POST',
+                url: "http://localhost:3000/account/login",
+                data: {
+                    "name": username,
+                    "pass": psw,   
+                }
+            });
+            console.log("s")
+            console.log(response)
+        } catch (error) {
+            console.log("e")
+            console.log(error);
+        }
+    } else {
+        alert("complete both fields");
     }
-    
-
 }
 
 export const startPage = async function() {
