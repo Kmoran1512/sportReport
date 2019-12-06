@@ -12,16 +12,18 @@
     <script src='./fullcalendar-4/packages/daygrid/main.js'></script>
     <script src='./fullcalendar-4/packages/interaction/main.js'></script>
     <script src='./fullcalendar-4/packages/google-calendar/main.js'></script>
+    <script src='./node_modules/jquery/dist/jquery.js'></script>
 
     <script>
 
       document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        
+        var calendarEl = document.getElementById('calendar');   
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
           plugins: [ 'dayGrid', 'interaction', 'googleCalendar'],
         
+          height: $(document).height()-20,
+
           header: {
             center: 'addEventButton'
          },
@@ -52,8 +54,8 @@
 
         /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
     function openNav(info) {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("calendar").style.marginLeft = "250px";
+    document.getElementById("mySidenav").style.width = "35%";
+    document.getElementById("calendar").style.marginRight = "35%";
     document.getElementById("mySidenav").append(info.event.title);
    
     }
@@ -61,7 +63,7 @@
     /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
     function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("calendar").style.marginLeft = "0";
+    document.getElementById("calendar").style.marginRight = "0";
     }
 
     </script>
