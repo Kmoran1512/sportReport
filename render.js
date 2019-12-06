@@ -218,6 +218,17 @@ export const toLogin = async function(event) {
     }
 }
 
+export const addWorkOutForm = async function() {
+    event.preventDefault();
+
+
+
+}
+
+
+
+
+
 export const startPage = async function() {
 
     const $root = $(document);
