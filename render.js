@@ -209,6 +209,7 @@ export const toLogin = async function(event) {
             });
             console.log("s")
             console.log(response)
+            document.location.href = "./calendarView.html";
         } catch (error) {
             console.log("e")
             console.log(error);
