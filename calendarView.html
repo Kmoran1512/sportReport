@@ -13,8 +13,10 @@
     <script src='./fullcalendar-4/packages/interaction/main.js'></script>
     <script src='./fullcalendar-4/packages/google-calendar/main.js'></script>
     <script src='./node_modules/jquery/dist/jquery.js'></script>
+    <script src='./node_modules/axios/dist/axios.js'></script>
 
     <script>
+      var selectedDate = "";
 
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');   
@@ -53,30 +55,73 @@
         calendar.render();
       });
 
-        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
-    function openNav(info) {
-    document.getElementById("mySidenav").style.width = "35%";
-    document.getElementById("calendar").style.marginRight = "35%";
-    document.getElementById("mySidenav").append(info.event.title);
-    }
 
-    function openFeedback(info) {
+      /*
+
+      Bugs with Feedback window:
+      - When saved adds feedback twice
+      - Can't overwrite existing feedback, will just add another one
+      - Will always pick first feedback written when selecting a day with multiple feedbacks existing
+      - Errors with new users, problem when merging dataStore when empty... (on first time don't merge?)
+      */
+
+    async function openFeedback(info) {
+
+      selectedDate = info.event.start.toLocaleDateString();
+      console.log(selectedDate);
+
+      let response = [0];
+      console.log("Retreive feedback from user.json");
+      
+      response = await axios({
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                },
+                url: "http://localhost:3000/user/data/DataStore",
+      });
+
+      let existingFeedback = response.data.result;
+
+      let obj = existingFeedback.find(o => o.date === selectedDate);
+
+      console.log(obj);
+
       document.getElementById("myForm").style.display = "block";
       document.getElementById("workoutTitle").textContent = "Today's Workout (" + info.event.start.toLocaleDateString("en-US") + ")";
 
-      //Pre-fill text box with data from user
+      if (obj != undefined) {
+        document.getElementById("feedbackForm").value = obj.feedback;
+      }
     }
 
     function closeFeedback(info) {
       document.getElementById("myForm").style.display = "none";
     }
 
-    function saveFeedback(info) {
+    async function saveFeedback(info) {
       if (document.getElementById("feedbackForm").value != "") {
+        
+        //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
+
+        let response = [0];
+        console.log("Post Feedback to user.json");
+        response = await axios({
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                },
+                url: "http://localhost:3000/user/data/DataStore",
+                data: {
+                  "data": {
+                    "date" : selectedDate, "feedback" : document.getElementById("feedbackForm").value
+                  }, 
+                  "type": "merge"
+                },
+        });
+
         closeFeedback();
-      } else {
-        //Store this for a particular user in an object for a unique day
-      } 
+      }
     }
 
     /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */

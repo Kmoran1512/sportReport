@@ -109,7 +109,6 @@ export const cancelSignUp = function(event) {
 }
 
 export const completeAthleteSignUp = async function(event) {
-    event.preventDefault();
 
     let pass = $(event.target).closest(".container").find(".pswInput")[0].value;
     let tomatch = $(event.target).closest(".container").find(".pswInputMatch")[0].value;
@@ -128,7 +127,7 @@ export const completeAthleteSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "name": athleteName,
+                        "feedback" : []
                     }    
                 }
             });
@@ -211,9 +210,12 @@ export const toLogin = async function(event) {
             console.log("s")
             console.log(response)
             document.location.href = "./calendarView.html";
+            localStorage.setItem('jwtKey', response.data.jwt); //Save Login token locally
+
         } catch (error) {
             console.log("e")
             console.log(error);
+            alert("Incorrect login details");
         }
     } else {
         alert("complete both fields");
