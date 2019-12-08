@@ -192,6 +192,7 @@ export const completeCoachSignUp = async function(event) {
 export const toLogin = async function(event) {
     event.preventDefault();
 
+    console.log($(event.target).closest(".container").find(".logpsw")[0].value);
     
     let psw = $(event.target).closest(".container").find(".logpsw")[0].value;
     let username = $(event.target).closest(".container").find(".logusr")[0].value;

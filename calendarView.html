@@ -45,7 +45,8 @@
           eventClick: function(info) {
                 info.jsEvent.cancelBubble = true;
                 info.jsEvent.preventDefault();
-                openNav(info);
+                //openNav(info);
+                openFeedback(info);
             }
         });
 
@@ -57,7 +58,25 @@
     document.getElementById("mySidenav").style.width = "35%";
     document.getElementById("calendar").style.marginRight = "35%";
     document.getElementById("mySidenav").append(info.event.title);
-   
+    }
+
+    function openFeedback(info) {
+      document.getElementById("myForm").style.display = "block";
+      document.getElementById("workoutTitle").textContent = "Today's Workout (" + info.event.start.toLocaleDateString("en-US") + ")";
+
+      //Pre-fill text box with data from user
+    }
+
+    function closeFeedback(info) {
+      document.getElementById("myForm").style.display = "none";
+    }
+
+    function saveFeedback(info) {
+      if (document.getElementById("feedbackForm").value != "") {
+        closeFeedback();
+      } else {
+        //Store this for a particular user in an object for a unique day
+      } 
     }
 
     /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
@@ -69,6 +88,21 @@
     </script>
   </head>
   <body>
+
+      <div class="form-popup" id="myForm">
+        <form class="form-container">
+          <h1 id="workoutTitle">Today's Workout</h1>
+      
+
+
+          <label for="feedback"><b>Feedback</b></label>
+          <input id="feedbackForm" type="text" placeholder="Enter Feedback" name="feedback" required>
+      
+          <button class="btn" onclick="saveFeedback()">Save Feedback</button>
+          <button type="button" class="btn cancel" onclick="closeFeedback()">Cancel</button>
+        </form>
+      </div>
+
 
         <div id="mySidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closebtn" onclick='closeNav()'>&times;</a>
