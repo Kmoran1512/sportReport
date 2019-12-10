@@ -5,8 +5,16 @@ export const onLoad = function(root) {
     if (!false) {
         root.find(".container").replaceWith(`
             <form class="container">
+
                 <div class="title-Container">Sport Report</div>
-                <h1>Login</h1>
+
+                <h1>Find your Club's Calendar</h1>
+
+                <label for="clubName"><b>Enter Club Name</b></label>
+                <input type="text" placeholder="Club Name" name="club-name" class="clubName">
+
+                
+                <h1>Or Login</h1>
             
                 <label for="username"><b>Username</b></label>
                 <input type="text" placeholder="Enter Username" name="username" class="logusr" required>
@@ -172,6 +180,23 @@ export const completeCoachSignUp = async function(event) {
                     }    
                 }
             });
+
+            console.log("hi1")
+
+            response = await axios({
+                method: 'POST',
+                url: "http://localhost:3000/public/clubs/",
+                data: {
+                    "data": {
+                        clubNames: clubName,
+                    },
+                    "type": "merge"
+                }
+            });
+
+            console.log("hi2")
+
+            
 
         } catch (error) {
             console.log(error);
