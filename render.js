@@ -135,7 +135,8 @@ export const completeAthleteSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "feedback" : []
+                        "feedback" : [],
+                        "permission": "Coach",
                     }    
                 }
             });
@@ -177,6 +178,7 @@ export const completeCoachSignUp = async function(event) {
                     "pass": pass,  
                     "data": {
                         "club name": clubName,
+                        "permission": "Coach",
                     }    
                 }
             });
@@ -253,10 +255,6 @@ export const addWorkOutForm = async function() {
 
 
 }
-
-
-
-
 
 export const startPage = async function() {
 
