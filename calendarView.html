@@ -16,6 +16,28 @@
     <script src='./node_modules/axios/dist/axios.js'></script>
 
     <script>
+      
+      let getUserPermissions = async function(){
+
+        console.log(localStorage.getItem('username'));
+
+        let response = await axios({
+                    method: 'GET',
+                    headers: {
+                      'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                    },
+                    url: "http://localhost:3000/account/data/DataStore/" + localStorage.getItem('username'),
+          });
+
+          console.log(response);
+      
+       return response.result.data;
+      }
+
+      let userPermissions = getUserPermissions();
+
+      console.log(userPermissions);
+
       var selectedDate = "";
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -177,10 +199,6 @@
         </form>
       </div>
 
-
-        <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick='closeNav()'>&times;</a>
-        </div>
         <div id='calendar'></div>
     
   </body>

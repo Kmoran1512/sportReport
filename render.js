@@ -236,8 +236,11 @@ export const toLogin = async function(event) {
             });
             console.log("s")
             console.log(response)
+           
             document.location.href = "./calendarView.html";
             localStorage.setItem('jwtKey', response.data.jwt); //Save Login token locally
+            localStorage.setItem('username', username); //Save username for when you are saved.
+            
 
         } catch (error) {
             console.log("e")
