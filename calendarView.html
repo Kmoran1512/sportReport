@@ -37,7 +37,7 @@
         addEventButton: {
             text: 'Add Practices',
             click: function() {
-                        //add google calender link in here
+                  document.getElementById("myModal").style.display = "block";
                 }
             }
         },
@@ -54,6 +54,20 @@
 
         calendar.render();
       });
+
+       // When the user clicks on <span> (x), close the modal
+   let closeModal = function() {
+    document.getElementsByClassName("close")[0].onclick = function() {
+      document.getElementById("myModal").style.display = "none";
+    }
+  }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == document.getElementById("myModal")) {
+        document.getElementById("myModal").style.display = "none";
+      }
+    } 
 
 
       /*
@@ -124,15 +138,30 @@
       }
     }
 
-    /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-    function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("calendar").style.marginRight = "0";
-    }
 
     </script>
   </head>
   <body>
+
+    <!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" onclick=closeModal()>&times;</span>
+      <h1>How To Link Your Google Calendar</h1>
+      <p id = "calendarLinkText">1. Open settings of your calendar </p>
+      <p id = "calendarLinkText">2. Scroll down to access permissions</p>
+      <p id = "calendarLinkText">3. Click the box make available to public</p>
+      <p id = "calendarLinkText">4. Type in gmail email linked to the goolge calendar and press submit:</p>
+
+      <form id=calendarInputWrapper>
+        <input id=calendarEmailTextArea></input>
+        <button type="submit" id="calendarEmailButton">Submit</button>
+      </form>
+      
+      </div>
+    </div>
 
       <div class="form-popup" id="myForm">
         <form class="form-container">
