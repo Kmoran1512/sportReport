@@ -132,6 +132,13 @@
   border-style: none;
 }
 
+#calendarEmailButton:hover,
+#calendarEmailButton:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 #calendarLinkText{
   left: 20px;
 }
@@ -139,6 +146,7 @@
 #calendarInputWrapper{
   text-align: center;
 }
-  .feedbackLabel {
+
+.feedbackLabel {
     font-size: large;
-  }
+}
