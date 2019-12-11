@@ -7,6 +7,8 @@
     <link href='./fullcalendar-4/packages/core/main.css' rel='stylesheet' />
     <link href='./fullcalendar-4/packages/daygrid/main.css' rel='stylesheet' />
     <link href='./calendarStyles.css' rel='stylesheet' />
+    <link href='./colorSlider.css' rel='stylesheet' />
+
 
     <script src='./fullcalendar-4/packages/core/main.js'></script>
     <script src='./fullcalendar-4/packages/daygrid/main.js'></script>
@@ -16,7 +18,9 @@
     <script src='./node_modules/axios/dist/axios.js'></script>
 
     <script>
+
       var selectedDate = "";
+    
 
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');   
@@ -52,6 +56,7 @@
         });
 
         calendar.render();
+        loadColor();
       });
 
 
@@ -63,6 +68,27 @@
       - Will always pick first feedback written when selecting a day with multiple feedbacks existing
       - Errors with new users, problem when merging dataStore when empty... (on first time don't merge?)
       */
+
+    async function loadColor() {
+      //Set past background color
+      try {
+        let response = [0];
+        response = await axios({
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/",
+        });
+
+        qs('#calendar').style.backgroundColor = response.data;
+        console.log(response.data.getRed());
+        qs('#red').value = response.data.getRed();
+
+      } catch {
+
+      }
+    }
 
     async function openFeedback(info) {
 
@@ -121,6 +147,21 @@
                 },
         });
         closeFeedback();
+        //Set past background color
+      try {
+        let response = [0];
+        response = await axios({
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/",
+        });
+
+        qs('#calendar').style.backgroundColor = response.data;
+      } catch {
+
+      }
       }
     }
 
@@ -137,8 +178,6 @@
       <div class="form-popup" id="myForm">
         <form class="form-container">
           <h1 id="workoutTitle">Today's Workout</h1>
-      
-
 
           <label class="feedbackLabel" for="feedback"><b>Feedback</b></label>
           <textarea id="feedbackForm" type="text" placeholder="Enter Feedback" name="feedback" required></textarea>
@@ -149,10 +188,31 @@
       </div>
 
 
-        <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick='closeNav()'>&times;</a>
+        <div>
+            <div class="color-slider-wrap">
+                <div class="color-wrap">
+                </div>
+                <div class="sliders">
+                    <div>
+                        <label for="red">Red</label>
+                        <input type="number" id="redNum">
+                        <input value="128" type="range" min="0" max="255" id="red">
+                    </div>
+                    <div>
+                        <label for="green">Green</label>
+                        <input type="number" id="greenNum">
+                        <input value="128" type="range" min="0" max="255" id="green">
+                    </div>
+                    <div>
+                        <label for="blue">Blue</label>
+                        <input type="number" id="blueNum">
+                        <input value="0" type="range" min="0" max="255" id="blue">
+                    </div>
+                </div>
+            </div>
         </div>
+        
         <div id='calendar'></div>
-    
+        <script src="colorSlider.js"></script>
   </body>
 </html>
