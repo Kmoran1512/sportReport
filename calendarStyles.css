@@ -4,6 +4,9 @@
     padding: 20px;
   }
 
+  #calendar {
+    background-color: #4CAF50;
+  }
   /* Floating feedback form */
 
   .open-button {
