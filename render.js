@@ -84,6 +84,9 @@ export const athleteSignUp = function(event) {
 
             <br/><br/>
 
+            <label for="club name"><b>Club Name</b></label>
+            <input type="text" placeholder="Enter Club Name" name="clubname" class="clubNameInput" required>
+
             <label for="name"><b>Athete Name</b></label>
             <input type="text" placeholder="Enter Name" name="name" class="nameInput" required>
         
@@ -137,6 +140,7 @@ export const completeAthleteSignUp = async function(event) {
     let pass = $(event.target).closest(".container").find(".pswInput")[0].value;
     let tomatch = $(event.target).closest(".container").find(".pswInputMatch")[0].value;
     let athleteName = $(event.target).closest(".container").find(".nameInput")[0].value;
+    let clubName = $(event.target).closest(".container").find(".clubNameInput")[0].value;
     let username = $(event.target).closest(".container").find(".usernameInput")[0].value;
 
     let response = [0];
@@ -151,7 +155,7 @@ export const completeAthleteSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "feedback" : [],
+                        "clubName": clubName,
                         "permission": "Athlete",
                     }    
                 }
