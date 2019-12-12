@@ -11,9 +11,13 @@ export const onLoad = function(root) {
                 <h1>Find your Club's Calendar</h1>
 
                 <label for="clubName"><b>Enter Club Name</b></label>
-                <input type="text" placeholder="Club Name" name="club-name" class="clubName">
 
-                
+                <div class="autocomplete">
+                    <input type="text" placeholder="Club Name" name="club-name" class="club-Name">
+                </div>
+
+                <button type="submit" class="find-club btn">Find Club</button>
+
                 <h1>Or Login</h1>
             
                 <label for="username"><b>Username</b></label>
@@ -136,7 +140,7 @@ export const completeAthleteSignUp = async function(event) {
                     "pass": pass,  
                     "data": {
                         "feedback" : [],
-                        "permission": "Coach",
+                        "permission": "Athlete",
                     }    
                 }
             });
@@ -177,7 +181,7 @@ export const completeCoachSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "clubName": clubName,
+                        "club name": clubName,
                         "permission": "Coach",
                     }    
                 }
@@ -190,7 +194,7 @@ export const completeCoachSignUp = async function(event) {
                 url: "http://localhost:3000/public/clubs/",
                 data: {
                     "data": {
-                        clubName: clubName,
+                        clubNames: clubName,
                     },
                     "type": "merge"
                 }
@@ -234,17 +238,10 @@ export const toLogin = async function(event) {
                     "pass": psw,   
                 }
             });
-
-            let emailResponse = await axios({
-                method: 'GET',
-                url: "http://localhost:3000/public/clubs/" + response.data.data.clubName,
-            });
-
-           
+            console.log("s")
+            console.log(response)
             document.location.href = "./calendarView.html";
             localStorage.setItem('jwtKey', response.data.jwt); //Save Login token locally
-            localStorage.setItem('username', username); //Save username for when you are saved.
-            localStorage.setItem('calendarEmail', emailResponse.data.result.email);            
 
         } catch (error) {
             console.log("e")
@@ -263,6 +260,71 @@ export const addWorkOutForm = async function() {
 
 }
 
+export const clubDebouncer = async function(event) {
+
+    let typed = $(event.target)[0].value
+
+    let response = 0;
+    let club_arr = [];
+    let final_arr = []
+
+    if (typed != "") {
+        try {
+
+            response = await axios({
+                method: 'GET',
+                url: "http://localhost:3000/public/clubs",
+            });
+
+            response.data.result.forEach(e => {
+                club_arr.push(e.clubNames)
+            });
+            
+            club_arr.forEach(e => {
+                if (typed == e.substring(0,typed.length)) {
+                    final_arr.push(e);
+                }
+            });
+        
+            if (final_arr.length > 0) {
+                let max;
+
+                if (final_arr.length < 5) {
+                    max = final_arr.length;
+                } else {
+                    max = 5
+                }
+
+                let auto_complete_container = $(`<div class="auto-container"></div>`)
+
+                for (let i = 0; i < max; i++) {
+                    let auto_complete_option = $(`<div class="auto-option">${final_arr[i]}</div>`);
+                    auto_complete_container.append(auto_complete_option);
+                }
+
+                $(event.target).closest(".autocomplete").append(auto_complete_container)
+                console.log(auto_complete_container)
+            }      
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }    
+}
+
+export const optionSelect = async function(event) {
+    let new_input = $(event.target)[0].innerText;
+    $(event.target).closest(".autocomplete").find('.club-Name')[0].value = new_input;
+}
+
+export const removeOptions = async function(event) {
+    console.log($(".autocomplete").find(".auto-container"))
+    if ($(".autocomplete").find(".auto-container").length > 0) {
+        $(".autocomplete").find(".auto-container").remove();
+    }
+}
+
+
 export const startPage = async function() {
 
     const $root = $(document);
@@ -272,11 +334,14 @@ export const startPage = async function() {
     {
         $root.on('click', '.signUp', athleteSignUp);
         $root.on('click', '.cancel-signUp', cancelSignUp);
-        $root.on('click', '.complete-ath-signUp', await completeAthleteSignUp);
-        $root.on('click', '.complete-coach-signUp', await completeCoachSignUp);
+        $root.on('click', '.complete-ath-signUp', completeAthleteSignUp);
+        $root.on('click', '.complete-coach-signUp', completeCoachSignUp);
         $root.on('click', '.coachbtn', coachSignUp);
         $root.on('click', '.athletebtn', athleteSignUp);
         $root.on('click', '.login', toLogin);
+        $root.on('keyup', '.club-Name', clubDebouncer);
+        $root.on('click', '.auto-option', optionSelect);
+        $root.on('click', document, removeOptions);
     }
 
 };

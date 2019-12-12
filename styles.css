@@ -38,21 +38,21 @@ body, html {
     color: black;
 }
   
-  /* Full-width input fields */
+/* Full-width input fields */
 input[type=text], input[type=password] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    border: none;
-    background: #f1f1f1;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 0px 0;
+  border: none;
+  background: #f1f1f1;
+  box-sizing: border-box;
+}
   
 input[type=text]:focus, input[type=password]:focus {
     background-color: #ddd;
     outline: none;
     box-sizing: border-box;
-  }
+}
   
   /* Set a style for the submit button */
 .btn {
@@ -86,6 +86,27 @@ input[type=text]:focus, input[type=password]:focus {
 }
   
 .btn:hover {
-    opacity: 1;
-    box-sizing: border-box;
+  opacity: 1;
+  box-sizing: border-box;
+}
+
+.auto-container {
+  z-index: 2;
+  position: absolute;
+  width: 95.3%;
+  height: auto,
+}
+
+.auto-option {
+  color: black;
+  z-index: 3;
+  height: 40px;
+  background-color: lightgrey;
+  text-align: left;
+  padding: 2px;
+}
+
+.auto-option:hover {
+  background-color: slategrey;
+  color: white;
 }
