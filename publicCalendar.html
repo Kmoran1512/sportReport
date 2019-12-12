@@ -43,9 +43,16 @@
         calendar.render();
       });
 
+      function logOut() {
+        localStorage.removeItem('calendarEmail');
+        document.location.href = "./index.html";
+    }
+
     </script>
   </head>
   <body>       
+        <div style="text-align: right;"><button style="height: 50px; width:100px;" type="button" onclick="logOut()">LogOut</button></div>
+
         <div id='calendar'></div>
   </body>
 </html>
