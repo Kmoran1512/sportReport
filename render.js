@@ -159,11 +159,8 @@ export const completeAthleteSignUp = async function(event) {
                         "permission": "Athlete",
                     }    
                 }
-            });
-            console.log(response.status);
-            
+            });            
         } catch (error) {
-            console.log(error);
         }
        
         //loadCoachPg2(event, response)
@@ -174,7 +171,6 @@ export const completeAthleteSignUp = async function(event) {
             alert("complete all fields");
         }
     }
-    
 }
 
 export const completeCoachSignUp = async function(event) {
@@ -201,9 +197,6 @@ export const completeCoachSignUp = async function(event) {
                     }    
                 }
             });
-
-            console.log("hi1")
-
             response = await axios({
                 method: 'POST',
                 url: "http://localhost:3000/public/clubs/" + clubName,
@@ -213,17 +206,9 @@ export const completeCoachSignUp = async function(event) {
                     }
                 },
                 type: "merge"
-            });
-
-            console.log("hi2")
-
-            
-
+            });           
         } catch (error) {
-            console.log(error);
         }
-   
-        //loadCoachPg2(event, response)
     } else { 
         if (pass != tomatch) {
             alert("passwords do not match");
@@ -231,7 +216,6 @@ export const completeCoachSignUp = async function(event) {
             alert("complete all fields");
         }
     }
-    
 }
 
 export const toLogin = async function(event) {
@@ -240,12 +224,8 @@ export const toLogin = async function(event) {
     let psw = $(event.target).closest(".container").find(".logpsw")[0].value;
     let username = $(event.target).closest(".container").find(".logusr")[0].value;
 
-    console.log(psw)
-    console.log(username)
-
     if (username != "" && psw != "") {
         try {
-            console.log("h:")
             const response = await axios({
                 method: 'POST',
                 url: "http://localhost:3000/account/login",
@@ -263,23 +243,19 @@ export const toLogin = async function(event) {
                     url: "http://localhost:3000/public/clubs/" + response.data.data.clubName,
                 });
             }catch{
-                console.log("Wrong" );
             }
 
             document.location.href = "./calendarView.html";
-            localStorage.setItem('jwtKey', response.data.jwt); //Save Login token locally
-            localStorage.setItem('username', username); //Save username for when you are saved.
+            localStorage.setItem('jwtKey', response.data.jwt);
+            localStorage.setItem('username', username);
             if(emailResponse){
                 localStorage.setItem('calendarEmail', emailResponse.data.result.email);  
-                console.log(emailResponse);
             }else{
                 localStorage.setItem('calendarEmail', "");
             }
                       
 
         } catch (error) {
-            console.log("e")
-            console.log(error);
             alert("Incorrect login details");
         }
     } else {
@@ -289,9 +265,6 @@ export const toLogin = async function(event) {
 
 export const addWorkOutForm = async function() {
     event.preventDefault();
-
-
-
 }
 
 export const clubDebouncer = async function(event) {
@@ -341,11 +314,9 @@ export const clubDebouncer = async function(event) {
                 }
 
                 $(event.target).closest(".autocomplete").append(auto_complete_container)
-                console.log(auto_complete_container)
             }      
             
         } catch (error) {
-            console.log(error);
         }
     } 
 }
@@ -356,42 +327,34 @@ export const optionSelect = async function(event) {
 }
 
 export const removeOptions = function(event) {
-    console.log($(".autocomplete").find(".auto-container"))
     if ($(".autocomplete").find(".auto-container").length > 0) {
         $(".autocomplete").find(".auto-container").remove();
     }
 }
 
 export const traverseAutoComplete = function(event) {
-    console.log(event)
 }
 
 export const viewCalanderPublic = async function(event) {
     event.preventDefault();
  let userClub = $(event.target).closest('.container').find(".autocomplete").find('.club-Name')[0].value;
-    let response = [0];
- response = await axios({
-    method: 'GET',
-    url: "http://localhost:3000/public/clubs/" + userClub,
-});
+    if (userClub != "") {
+        let response = [0];
+        response = await axios({
+            method: 'GET',
+            url: "http://localhost:3000/public/clubs/" + userClub,
+        });
+        localStorage.setItem("calendarEmail", response.data.result.email);
 
-
-
-localStorage.setItem("calendarEmail", response.data.result.email);
-
-location.href = "./publicCalendar.html";
-
+        location.href = "./publicCalendar.html";
+    }
 }
-
-
-
 
 export const startPage = async function() {
 
     const $root = $(document);
 
     onLoad($root);
-
     {
         $root.on('click', '.signUp', athleteSignUp);
         $root.on('click', '.cancel-signUp', cancelSignUp);
@@ -406,7 +369,6 @@ export const startPage = async function() {
         $root.on('click', document, removeOptions);
         $root.on('keydown', document, traverseAutoComplete);
     }
-
 };
 
 $(async function() {

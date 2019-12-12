@@ -7,8 +7,6 @@
     <link href='./fullcalendar-4/packages/core/main.css' rel='stylesheet' />
     <link href='./fullcalendar-4/packages/daygrid/main.css' rel='stylesheet' />
     <link href='./calendarStyles.css' rel='stylesheet' />
-
-
     <script src='./fullcalendar-4/packages/core/main.js'></script>
     <script src='./fullcalendar-4/packages/daygrid/main.js'></script>
     <script src='./fullcalendar-4/packages/interaction/main.js'></script>
@@ -28,7 +26,6 @@
                   },
                   url: "http://localhost:3000/private/data/DataStore/backgroundColor",
         });
-        console.log(response.data.result)
         changeColor(response.data.result);
         } catch {
       }
@@ -59,7 +56,6 @@
                 }
             }
         },
-
           fixedWeekCount: false,
 
           eventClick: function(info) {
@@ -106,17 +102,12 @@
         if (event.target == document.getElementById("myModal")) {
           document.getElementById("myModal").style.display = "none";
         }
-      } 
-
+      }
 
       async function openFeedback(info) {
 
       selectedDate = info.event.start.valueOf(); //SETS DATE BEING EDITED
-      
-      console.log(selectedDate);
-
       let response = [0];
-      console.log("Retreive feedback from user.json");
       
       try {
         response = await axios({
@@ -139,10 +130,8 @@
         document.getElementById("myForm").style.display = "block";
         document.getElementById("workoutTitle").textContent = "Today's Workout (" + info.event.start.toLocaleDateString("en-US") + ")";
       }
-        
     }
 
-    
       function closeFeedback(info) {
       document.getElementById("myForm").style.display = "none";
       location.reload();
@@ -151,10 +140,7 @@
       async function saveFeedback(info) {
         if (document.getElementById("feedbackForm").value != "") {
           
-          //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
-
           let response = [0];
-          console.log("Post Feedback to user.json");
           response = await axios({
                   method: 'POST',
                   headers: {
@@ -171,7 +157,6 @@
         }
       }
  
-      
       async function submitCalendarEmail(){
         if(userPermission == "Coach"){
           response = await axios({
@@ -183,20 +168,17 @@
                     } 
                   },
           });
-
         localStorage.setItem("calendarEmail",  document.getElementById("calendarEmailTextArea").value);
         document.getElementById("myModal").style.display = "none";
         location.reload();
       }
     }
 
-    //
     async function changeColor(color, from = "load") {
       document.getElementById("calendar").style.backgroundColor = color;
       if (from == "click") {
         saveCurrentColor(color);
       }
-      
     }
 
     async function getStoredColor() {
@@ -214,7 +196,6 @@
       }
     }
 
-    //
     async function saveCurrentColor(color) {
       try {
         let response = [0];
@@ -229,19 +210,14 @@
           },
         });
       } catch (error) {
-        console.log(error)
       }
     }
 
     function logOut() {
-      localStorage.removeItem('jwtKey'); //Remove Key
+      localStorage.removeItem('jwtKey');
       localStorage.removeItem('emailCalendar');
       document.location.href = "./index.html";
     }
-
-    // 
-
-
     </script>
   </head>
   <body>
@@ -294,8 +270,6 @@
               <div><button style="background-color: rgb(160, 160, 160);" type="button" onclick="changeColor('rgb(160, 160, 160)', 'click')"></button></div>
             </div>
           </div>
-
-        
         <div id='calendar'></div>
   </body>
 </html>

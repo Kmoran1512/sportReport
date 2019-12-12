@@ -7,8 +7,6 @@
     <link href='./fullcalendar-4/packages/core/main.css' rel='stylesheet' />
     <link href='./fullcalendar-4/packages/daygrid/main.css' rel='stylesheet' />
     <link href='./calendarStyles.css' rel='stylesheet' />
-
-
     <script src='./fullcalendar-4/packages/core/main.js'></script>
     <script src='./fullcalendar-4/packages/daygrid/main.js'></script>
     <script src='./fullcalendar-4/packages/interaction/main.js'></script>
@@ -35,24 +33,18 @@
         events: {
             googleCalendarId: localStorage.getItem("calendarEmail"),
         },
-        
-
           fixedWeekCount: false,
         });
-
         calendar.render();
       });
-
       function logOut() {
         localStorage.removeItem('calendarEmail');
         document.location.href = "./index.html";
     }
-
     </script>
   </head>
   <body>       
         <div style="text-align: right;"><button style="height: 50px; width:100px;" type="button" onclick="logOut()">Back Home</button></div>
-
         <div id='calendar'></div>
   </body>
 </html>
