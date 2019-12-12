@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Sport Report</title>
+
+    <link href='./fullcalendar-4/packages/core/main.css' rel='stylesheet' />
+    <link href='./fullcalendar-4/packages/daygrid/main.css' rel='stylesheet' />
+    <link href='./calendarStyles.css' rel='stylesheet' />
+
+
+    <script src='./fullcalendar-4/packages/core/main.js'></script>
+    <script src='./fullcalendar-4/packages/daygrid/main.js'></script>
+    <script src='./fullcalendar-4/packages/interaction/main.js'></script>
+    <script src='./fullcalendar-4/packages/google-calendar/main.js'></script>
+    <script src='./node_modules/jquery/dist/jquery.js'></script>
+    <script src='./node_modules/axios/dist/axios.js'></script>
+
+    <script>
+
+      let selectedDate = "";
+
+      document.addEventListener('DOMContentLoaded', function() {
+        let calendarEl = document.getElementById('calendar');   
+
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+          plugins: [ 'dayGrid', 'interaction', 'googleCalendar'],
+        
+          height: $(document).height()-20,
+
+          header: {
+            center: 'addEventButton'
+         },
+         googleCalendarApiKey: 'AIzaSyB4It3AW2oTsPwnNDXHQ1rIi_aqlJwpRAM',
+        events: {
+            googleCalendarId: localStorage.getItem("calendarEmail"),
+        },
+        
+
+          fixedWeekCount: false,
+        });
+
+        calendar.render();
+      });
+
+    </script>
+  </head>
+  <body>       
+        <div id='calendar'></div>
+  </body>
+</html>

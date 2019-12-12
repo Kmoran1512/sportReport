@@ -235,6 +235,7 @@
 
     function logOut() {
       localStorage.removeItem('jwtKey'); //Remove Key
+      localStorage.removeItem('emailCalendar');
       document.location.href = "./index.html";
     }
 

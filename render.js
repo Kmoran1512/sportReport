@@ -366,6 +366,25 @@ export const traverseAutoComplete = function(event) {
     console.log(event)
 }
 
+export const viewCalanderPublic = async function(event) {
+    event.preventDefault();
+ let userClub = $(event.target).closest('.container').find(".autocomplete").find('.club-Name')[0].value;
+    let response = [0];
+ response = await axios({
+    method: 'GET',
+    url: "http://localhost:3000/public/clubs/" + userClub,
+});
+
+
+
+localStorage.setItem("calendarEmail", response.data.result.email);
+
+location.href = "./publicCalendar.html";
+
+}
+
+
+
 
 export const startPage = async function() {
 
@@ -381,6 +400,7 @@ export const startPage = async function() {
         $root.on('click', '.coachbtn', coachSignUp);
         $root.on('click', '.athletebtn', athleteSignUp);
         $root.on('click', '.login', toLogin);
+        $root.on('click', '.find-club', viewCalanderPublic);
         $root.on('keyup', '.club-Name', clubDebouncer);
         $root.on('click', '.auto-option', optionSelect);
         $root.on('click', document, removeOptions);
