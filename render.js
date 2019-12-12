@@ -105,18 +105,30 @@ export const athleteSignUp = function(event) {
 export const cancelSignUp = function(event) {
     $(event.target).closest(".container").replaceWith(`
         <form class="container">
-            <div class="title-Container">Sport Report</div>
-            <h1>Login</h1>
 
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
+        <div class="title-Container">Sport Report</div>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+        <h1>Find your Club's Calendar</h1>
 
-            <button type="submit" class="login btn">Login</button>
-            <button type="button" class="signUp btn">Sign Up</button>
-        </form>
+        <label for="clubName"><b>Enter Club Name</b></label>
+
+        <div class="autocomplete">
+            <input type="text" placeholder="Club Name" name="club-name" class="club-Name">
+        </div>
+
+        <button type="submit" class="find-club btn">Find Club</button>
+
+        <h1>Or Login</h1>
+
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" class="logusr" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" class="logpsw" required>
+
+        <button type="submit" class="login btn">Login</button>
+        <button type="button" class="signUp btn">Sign Up</button>
+    </form>
     `);
 }
 
@@ -270,6 +282,8 @@ export const clubDebouncer = async function(event) {
 
     let typed = $(event.target)[0].value
 
+    removeOptions(0);
+
     let response = 0;
     let club_arr = [];
     let final_arr = []
@@ -315,7 +329,7 @@ export const clubDebouncer = async function(event) {
         } catch (error) {
             console.log(error);
         }
-    }    
+    } 
 }
 
 export const optionSelect = async function(event) {
@@ -323,7 +337,7 @@ export const optionSelect = async function(event) {
     $(event.target).closest(".autocomplete").find('.club-Name')[0].value = new_input;
 }
 
-export const removeOptions = async function(event) {
+export const removeOptions = function(event) {
     console.log($(".autocomplete").find(".auto-container"))
     if ($(".autocomplete").find(".auto-container").length > 0) {
         $(".autocomplete").find(".auto-container").remove();
