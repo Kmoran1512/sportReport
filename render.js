@@ -155,7 +155,7 @@ export const completeAthleteSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "club name": clubName,
+                        "clubName": clubName,
                         "permission": "Athlete",
                     }    
                 }
