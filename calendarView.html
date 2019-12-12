@@ -18,6 +18,21 @@
 
     <script>
 
+      $(window).bind("load", async function() {
+        try {
+        let response = [0];
+        response = await axios({
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+        });
+        changeColor(response.data.result);
+        } catch {
+      }
+      });
+
       let selectedDate = "";
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -172,6 +187,43 @@
       }
     }
 
+    async function changeColor(color) {
+      document.getElementById("calendar").style.backgroundColor = color;
+      saveCurrentColor(color);
+    }
+
+    async function getStoredColor() {
+      try {
+        let response = [0];
+        response = await axios({
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+        });
+        return(`rgb(${response.data.result[0]},${response.data.result[1]},${response.data.result[2]})`);
+      } catch {
+      }
+    }
+
+    async function saveCurrentColor(color) {
+      try {
+        let response = [0];
+        response = await axios({
+                  method: 'POST',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+                  data: {
+                  "data": color
+                },
+        });
+      } catch {
+      }
+    }
+
 
     </script>
   </head>
@@ -210,6 +262,19 @@
         </form>
       </div>
 
+      <div>
+            <div class="flex-container">
+              <div><button style="background-color: rgb(255, 255, 255);" type="button" onclick="changeColor('rgb(255, 255, 255)')"></button></div>
+              <div><button style="background-color: rgb(224, 164, 224);" type="button" onclick="changeColor('rgb(224, 164, 224)')"></button></div>
+              <div><button style="background-color: rgb(255, 102, 102);" type="button" onclick="changeColor('rgb(255, 102, 102)')"></button></div>  
+              <div><button style="background-color: rgb(255, 153, 51);" type="button" onclick="changeColor('rgb(255, 153, 51)')"></button></div>
+              <div><button style="background-color: rgb(197, 197, 63);" type="button" onclick="changeColor('rgb(197, 197, 63)')"></button></div>
+              <div><button style="background-color: rgb(98, 197, 98);" type="button" onclick="changeColor('rgb(98, 197, 98)')"></button></div>
+              <div><button style="background-color: rgb(115, 168, 221);" type="button" onclick="changeColor('rgb(115, 168, 221)')"></button></div>
+              <div><button style="background-color: rgb(123, 93, 153);" type="button" onclick="changeColor('rgb(123, 93, 153)')"></button></div>
+              <div><button style="background-color: rgb(160, 160, 160);" type="button" onclick="changeColor('rgb(160, 160, 160)')"></button></div>
+            </div>
+          </div>
 
         
         <div id='calendar'></div>
