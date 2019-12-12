@@ -207,13 +207,13 @@ export const completeCoachSignUp = async function(event) {
 
             response = await axios({
                 method: 'POST',
-                url: "http://localhost:3000/public/clubs/",
+                url: "http://localhost:3000/public/clubs/" + clubName,
                 data: {
                     "data": {
-                        clubName: clubName,
-                    },
-                    "type": "merge"
-                }
+                        "email": "0"
+                    }
+                },
+                type: "merge"
             });
 
             console.log("hi2")
@@ -313,9 +313,11 @@ export const clubDebouncer = async function(event) {
                 url: "http://localhost:3000/public/clubs",
             });
 
-            response.data.result.forEach(e => {
-                if (e.clubNames != undefined) {club_arr.push(e.clubNames)}
-            });
+            let key
+
+            for (key in response.data.result) {
+                club_arr.push(key.toString())
+            }
             
             club_arr.forEach(e => {
                 if (typed.toUpperCase() == e.substring(0,typed.length).toUpperCase()) {
