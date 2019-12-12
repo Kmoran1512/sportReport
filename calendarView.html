@@ -28,6 +28,7 @@
                   },
                   url: "http://localhost:3000/private/data/DataStore/backgroundColor",
         });
+        console.log(response.data.result)
         changeColor(response.data.result);
         } catch {
       }
@@ -70,20 +71,19 @@
 
         calendar.render();
       });
-
+      
       let userPermissions;
       let userClub;
       
       let getUserPermissions = async function(){
 
         let response = await axios({
-                    method: 'GET',
-                    headers: {
-                      'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                    },
-                    url: "http://localhost:3000/account/status" ,
-          }
-          );
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+            },
+            url: "http://localhost:3000/account/status" ,
+        });
 
         let user = localStorage.getItem('username');
                 
@@ -91,25 +91,25 @@
         userClub = response.data.user.data.clubName;
 
       }
-
+      
       getUserPermissions();
 
        // When the user clicks on <span> (x), close the modal
-   let closeModal = function() {
-    document.getElementsByClassName("close")[0].onclick = function() {
-      document.getElementById("myModal").style.display = "none";
-    }
-  }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("myModal")) {
-        document.getElementById("myModal").style.display = "none";
+      let closeModal = function() {
+        document.getElementsByClassName("close")[0].onclick = function() {
+          document.getElementById("myModal").style.display = "none";
+        }
       }
-    } 
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == document.getElementById("myModal")) {
+          document.getElementById("myModal").style.display = "none";
+        }
+      } 
 
 
-    async function openFeedback(info) {
+      async function openFeedback(info) {
 
       selectedDate = info.event.start.valueOf(); //SETS DATE BEING EDITED
       
@@ -142,44 +142,47 @@
         
     }
 
-    function closeFeedback(info) {
+    
+      function closeFeedback(info) {
       document.getElementById("myForm").style.display = "none";
     }
 
-    async function saveFeedback(info) {
-      if (document.getElementById("feedbackForm").value != "") {
-        
-        //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
+      async function saveFeedback(info) {
+        if (document.getElementById("feedbackForm").value != "") {
+          
+          //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
 
-        let response = [0];
-        console.log("Post Feedback to user.json");
-        response = await axios({
-                method: 'POST',
-                headers: {
-                  'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                },
-                url: "http://localhost:3000/user/data/DataStore/" + selectedDate,
-                data: {
-                  "data": {
-                    "date" : selectedDate, "feedback" : document.getElementById("feedbackForm").value
-                  }, 
-                },
-        });
-        closeFeedback();      
+          let response = [0];
+          console.log("Post Feedback to user.json");
+          response = await axios({
+                  method: 'POST',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/user/data/DataStore/" + selectedDate,
+                  data: {
+                    "data": {
+                      "date" : selectedDate, "feedback" : document.getElementById("feedbackForm").value
+                    }, 
+                  },
+          });
+          closeFeedback();      
+        }
       }
-    }
-
-    async function submitCalendarEmail(){
-      if(userPermission == "Coach"){
-        response = await axios({
-                method: 'POST',
-                url: "http://localhost:3000/public/clubs/" + userClub,
-                data: {
-                  "data": {
-                    "email" : document.getElementById("calendarEmailTextArea").value,
-                  }, 
-                },
-        });
+ 
+      
+      async function submitCalendarEmail(){
+        if(userPermission == "Coach"){
+          response = await axios({
+                  method: 'POST',
+                  url: "http://localhost:3000/public/clubs/" + userClub,
+                  data: {
+                    "data": {
+                      "email" : document.getElementById("calendarEmailTextArea").value,
+                    }, 
+                    "type": "merge"
+                  },
+          });
 
         localStorage.setItem("calendarEmail",  document.getElementById("calendarEmailTextArea").value);
         document.getElementById("myModal").style.display = "none";
@@ -187,9 +190,13 @@
       }
     }
 
-    async function changeColor(color) {
+    //
+    async function changeColor(color, from = "load") {
       document.getElementById("calendar").style.backgroundColor = color;
-      saveCurrentColor(color);
+      if (from == "click") {
+        saveCurrentColor(color);
+      }
+      
     }
 
     async function getStoredColor() {
@@ -207,22 +214,26 @@
       }
     }
 
+    //
     async function saveCurrentColor(color) {
       try {
         let response = [0];
         response = await axios({
-                  method: 'POST',
-                  headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                  },
-                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
-                  data: {
-                  "data": color
-                },
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+          },
+          url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+          data: {
+            "data": color
+          },
         });
-      } catch {
+      } catch (error) {
+        console.log(error)
       }
     }
+
+    // 
 
 
     </script>
@@ -264,15 +275,15 @@
 
       <div>
             <div class="flex-container">
-              <div><button style="background-color: rgb(255, 255, 255);" type="button" onclick="changeColor('rgb(255, 255, 255)')"></button></div>
-              <div><button style="background-color: rgb(224, 164, 224);" type="button" onclick="changeColor('rgb(224, 164, 224)')"></button></div>
-              <div><button style="background-color: rgb(255, 102, 102);" type="button" onclick="changeColor('rgb(255, 102, 102)')"></button></div>  
-              <div><button style="background-color: rgb(255, 153, 51);" type="button" onclick="changeColor('rgb(255, 153, 51)')"></button></div>
-              <div><button style="background-color: rgb(197, 197, 63);" type="button" onclick="changeColor('rgb(197, 197, 63)')"></button></div>
-              <div><button style="background-color: rgb(98, 197, 98);" type="button" onclick="changeColor('rgb(98, 197, 98)')"></button></div>
-              <div><button style="background-color: rgb(115, 168, 221);" type="button" onclick="changeColor('rgb(115, 168, 221)')"></button></div>
-              <div><button style="background-color: rgb(123, 93, 153);" type="button" onclick="changeColor('rgb(123, 93, 153)')"></button></div>
-              <div><button style="background-color: rgb(160, 160, 160);" type="button" onclick="changeColor('rgb(160, 160, 160)')"></button></div>
+              <div><button style="background-color: rgb(255, 255, 255);" type="button" onclick="changeColor('rgb(255, 255, 255)', 'click')"></button></div>
+              <div><button style="background-color: rgb(224, 164, 224);" type="button" onclick="changeColor('rgb(224, 164, 224)', 'click')"></button></div>
+              <div><button style="background-color: rgb(255, 102, 102);" type="button" onclick="changeColor('rgb(255, 102, 102)', 'click')"></button></div>  
+              <div><button style="background-color: rgb(255, 153, 51);" type="button" onclick="changeColor('rgb(255, 153, 51)', 'click')"></button></div>
+              <div><button style="background-color: rgb(197, 197, 63);" type="button" onclick="changeColor('rgb(197, 197, 63)', 'click')"></button></div>
+              <div><button style="background-color: rgb(98, 197, 98);" type="button" onclick="changeColor('rgb(98, 197, 98)', 'click')"></button></div>
+              <div><button style="background-color: rgb(115, 168, 221);" type="button" onclick="changeColor('rgb(115, 168, 221)', 'click')"></button></div>
+              <div><button style="background-color: rgb(123, 93, 153);" type="button" onclick="changeColor('rgb(123, 93, 153)', 'click')"></button></div>
+              <div><button style="background-color: rgb(160, 160, 160);" type="button" onclick="changeColor('rgb(160, 160, 160)', 'click')"></button></div>
             </div>
           </div>
 
