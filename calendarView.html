@@ -7,7 +7,6 @@
     <link href='./fullcalendar-4/packages/core/main.css' rel='stylesheet' />
     <link href='./fullcalendar-4/packages/daygrid/main.css' rel='stylesheet' />
     <link href='./calendarStyles.css' rel='stylesheet' />
-    <link href='./colorSlider.css' rel='stylesheet' />
 
 
     <script src='./fullcalendar-4/packages/core/main.js'></script>
@@ -18,6 +17,22 @@
     <script src='./node_modules/axios/dist/axios.js'></script>
 
     <script>
+
+      $(window).bind("load", async function() {
+        try {
+        let response = [0];
+        response = await axios({
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+        });
+        console.log(response.data.result)
+        changeColor(response.data.result);
+        } catch {
+      }
+      });
 
       let selectedDate = "";
 
@@ -55,22 +70,20 @@
         });
 
         calendar.render();
-        loadColor();
       });
-
+      
       let userPermissions;
       let userClub;
       
       let getUserPermissions = async function(){
 
         let response = await axios({
-                    method: 'GET',
-                    headers: {
-                      'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                    },
-                    url: "http://localhost:3000/account/status" ,
-          }
-          );
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+            },
+            url: "http://localhost:3000/account/status" ,
+        });
 
         let user = localStorage.getItem('username');
                 
@@ -78,55 +91,25 @@
         userClub = response.data.user.data.clubName;
 
       }
-
+      
       getUserPermissions();
 
        // When the user clicks on <span> (x), close the modal
-   let closeModal = function() {
-    document.getElementsByClassName("close")[0].onclick = function() {
-      document.getElementById("myModal").style.display = "none";
-    }
-  }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("myModal")) {
-        document.getElementById("myModal").style.display = "none";
+      let closeModal = function() {
+        document.getElementsByClassName("close")[0].onclick = function() {
+          document.getElementById("myModal").style.display = "none";
+        }
       }
-    } 
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == document.getElementById("myModal")) {
+          document.getElementById("myModal").style.display = "none";
+        }
+      } 
 
 
-      /*
-
-      Bugs with Feedback window:
-      - When saved adds feedback twice
-      - Can't overwrite existing feedback, will just add another one
-      - Will always pick first feedback written when selecting a day with multiple feedbacks existing
-      - Errors with new users, problem when merging dataStore when empty... (on first time don't merge?)
-      */
-
-    async function loadColor() {
-      //Set past background color
-      try {
-        let response = [0];
-        response = await axios({
-                  method: 'GET',
-                  headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                  },
-                  url: "http://localhost:3000/private/data/DataStore/",
-        });
-
-        qs('#calendar').style.backgroundColor = response.data;
-        console.log(response.data.getRed());
-        qs('#red').value = response.data.getRed();
-
-      } catch {
-
-      }
-    }
-
-    async function openFeedback(info) {
+      async function openFeedback(info) {
 
       selectedDate = info.event.start.valueOf(); //SETS DATE BEING EDITED
       
@@ -159,31 +142,64 @@
         
     }
 
-    function closeFeedback(info) {
+    
+      function closeFeedback(info) {
       document.getElementById("myForm").style.display = "none";
     }
 
-    async function saveFeedback(info) {
-      if (document.getElementById("feedbackForm").value != "") {
-        
-        //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
+      async function saveFeedback(info) {
+        if (document.getElementById("feedbackForm").value != "") {
+          
+          //console.log(localStorage.getItem('jwtKey')); (Get JWT Key)
 
-        let response = [0];
-        console.log("Post Feedback to user.json");
-        response = await axios({
-                method: 'POST',
-                headers: {
-                  'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                },
-                url: "http://localhost:3000/user/data/DataStore/" + selectedDate,
-                data: {
-                  "data": {
-                    "date" : selectedDate, "feedback" : document.getElementById("feedbackForm").value
-                  }, 
-                },
-        });
-        closeFeedback();
-        //Set past background color
+          let response = [0];
+          console.log("Post Feedback to user.json");
+          response = await axios({
+                  method: 'POST',
+                  headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                  },
+                  url: "http://localhost:3000/user/data/DataStore/" + selectedDate,
+                  data: {
+                    "data": {
+                      "date" : selectedDate, "feedback" : document.getElementById("feedbackForm").value
+                    }, 
+                  },
+          });
+          closeFeedback();      
+        }
+      }
+ 
+      
+      async function submitCalendarEmail(){
+        if(userPermission == "Coach"){
+          response = await axios({
+                  method: 'POST',
+                  url: "http://localhost:3000/public/clubs/" + userClub,
+                  data: {
+                    "data": {
+                      "email" : document.getElementById("calendarEmailTextArea").value,
+                    }, 
+                    "type": "merge"
+                  },
+          });
+
+        localStorage.setItem("calendarEmail",  document.getElementById("calendarEmailTextArea").value);
+        document.getElementById("myModal").style.display = "none";
+        location.reload();
+      }
+    }
+
+    //
+    async function changeColor(color, from = "load") {
+      document.getElementById("calendar").style.backgroundColor = color;
+      if (from == "click") {
+        saveCurrentColor(color);
+      }
+      
+    }
+
+    async function getStoredColor() {
       try {
         let response = [0];
         response = await axios({
@@ -191,33 +207,38 @@
                   headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
                   },
-                  url: "http://localhost:3000/private/data/DataStore/",
+                  url: "http://localhost:3000/private/data/DataStore/backgroundColor",
         });
-
-        qs('#calendar').style.backgroundColor = response.data;
+        return(`rgb(${response.data.result[0]},${response.data.result[1]},${response.data.result[2]})`);
       } catch {
-
-      }
       }
     }
 
-    async function submitCalendarEmail(){
-      if(userPermission == "Coach"){
+    //
+    async function saveCurrentColor(color) {
+      try {
+        let response = [0];
         response = await axios({
-                method: 'POST',
-                url: "http://localhost:3000/public/clubs/" + userClub,
-                data: {
-                  "data": {
-                    "email" : document.getElementById("calendarEmailTextArea").value,
-                  }, 
-                },
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+          },
+          url: "http://localhost:3000/private/data/DataStore/backgroundColor",
+          data: {
+            "data": color
+          },
         });
-
-        localStorage.setItem("calendarEmail",  document.getElementById("calendarEmailTextArea").value);
-        document.getElementById("myModal").style.display = "none";
-        location.reload();
+      } catch (error) {
+        console.log(error)
       }
     }
+
+    function logOut() {
+      localStorage.removeItem('jwtKey'); //Remove Key
+      document.location.href = "./index.html";
+    }
+
+    // 
 
 
     </script>
@@ -257,32 +278,23 @@
         </form>
       </div>
 
+      <div style="text-align: right;"><button style="height: 50px; width:100px;" type="button" onclick="logOut()">LogOut</button></div>
 
-        <div>
-            <div class="color-slider-wrap">
-                <div class="color-wrap">
-                </div>
-                <div class="sliders">
-                    <div>
-                        <label for="red">Red</label>
-                        <input type="number" id="redNum">
-                        <input value="128" type="range" min="0" max="255" id="red">
-                    </div>
-                    <div>
-                        <label for="green">Green</label>
-                        <input type="number" id="greenNum">
-                        <input value="128" type="range" min="0" max="255" id="green">
-                    </div>
-                    <div>
-                        <label for="blue">Blue</label>
-                        <input type="number" id="blueNum">
-                        <input value="0" type="range" min="0" max="255" id="blue">
-                    </div>
-                </div>
+      <div>
+            <div class="flex-container">
+              <div><button style="background-color: rgb(255, 255, 255);" type="button" onclick="changeColor('rgb(255, 255, 255)', 'click')"></button></div>
+              <div><button style="background-color: rgb(224, 164, 224);" type="button" onclick="changeColor('rgb(224, 164, 224)', 'click')"></button></div>
+              <div><button style="background-color: rgb(255, 102, 102);" type="button" onclick="changeColor('rgb(255, 102, 102)', 'click')"></button></div>  
+              <div><button style="background-color: rgb(255, 153, 51);" type="button" onclick="changeColor('rgb(255, 153, 51)', 'click')"></button></div>
+              <div><button style="background-color: rgb(197, 197, 63);" type="button" onclick="changeColor('rgb(197, 197, 63)', 'click')"></button></div>
+              <div><button style="background-color: rgb(98, 197, 98);" type="button" onclick="changeColor('rgb(98, 197, 98)', 'click')"></button></div>
+              <div><button style="background-color: rgb(115, 168, 221);" type="button" onclick="changeColor('rgb(115, 168, 221)', 'click')"></button></div>
+              <div><button style="background-color: rgb(123, 93, 153);" type="button" onclick="changeColor('rgb(123, 93, 153)', 'click')"></button></div>
+              <div><button style="background-color: rgb(160, 160, 160);" type="button" onclick="changeColor('rgb(160, 160, 160)', 'click')"></button></div>
             </div>
-        </div>
+          </div>
+
         
         <div id='calendar'></div>
-        <script src="colorSlider.js"></script>
   </body>
 </html>

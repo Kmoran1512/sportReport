@@ -4,9 +4,6 @@
     padding: 20px;
   }
 
-  #calendar {
-    background-color: #4CAF50;
-  }
   /* Floating feedback form */
 
   .open-button {
@@ -152,4 +149,27 @@
 
 .feedbackLabel {
     font-size: large;
+}
+
+
+/* Change Color Style */
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  border: #000000;
+  border-width: thick;
+  padding-bottom: 25px;
+}
+
+.flex-container > div {
+  background-color: #000000;
+  width: 100%;
+  text-align: center;
+  line-height: 75px;
+}
+
+.flex-container > div > button {
+  height: 100%;
+  width: 100%;
 }
