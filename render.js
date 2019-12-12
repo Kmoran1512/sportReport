@@ -210,7 +210,7 @@ export const completeCoachSignUp = async function(event) {
                 url: "http://localhost:3000/public/clubs/",
                 data: {
                     "data": {
-                        clubNames: clubName,
+                        clubName: clubName,
                     },
                     "type": "merge"
                 }
@@ -272,6 +272,9 @@ export const toLogin = async function(event) {
             localStorage.setItem('username', username); //Save username for when you are saved.
             if(emailResponse){
                 localStorage.setItem('calendarEmail', emailResponse.data.result.email);  
+                console.log(emailResponse);
+            }else{
+                localStorage.setItem('calendarEmail', "");
             }
                       
 
