@@ -178,7 +178,6 @@ export const completeAthleteSignUp = async function(event) {
 }
 
 export const completeCoachSignUp = async function(event) {
-    event.preventDefault();
 
 
     let pass = $(event.target).closest(".container").find(".pswInput")[0].value;
