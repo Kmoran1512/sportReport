@@ -233,6 +233,11 @@
       }
     }
 
+    function logOut() {
+      localStorage.removeItem('jwtKey'); //Remove Key
+      document.location.href = "./index.html";
+    }
+
     // 
 
 
@@ -272,6 +277,8 @@
           <button type="button" class="btn cancel" onclick="closeFeedback()">Cancel</button>
         </form>
       </div>
+
+      <div style="text-align: right;"><button style="height: 50px; width:100px;" type="button" onclick="logOut()">LogOut</button></div>
 
       <div>
             <div class="flex-container">
