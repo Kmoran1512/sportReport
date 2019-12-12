@@ -233,11 +233,12 @@ export const completeCoachSignUp = async function(event) {
 
 export const toLogin = async function(event) {
     event.preventDefault();
-
-    console.log($(event.target).closest(".container").find(".logpsw")[0].value);
     
     let psw = $(event.target).closest(".container").find(".logpsw")[0].value;
     let username = $(event.target).closest(".container").find(".logusr")[0].value;
+
+    console.log(psw)
+    console.log(username)
 
     if (username != "" && psw != "") {
         try {
@@ -301,7 +302,7 @@ export const clubDebouncer = async function(event) {
             });
             
             club_arr.forEach(e => {
-                if (typed == e.substring(0,typed.length)) {
+                if (typed.toUpperCase() == e.substring(0,typed.length).toUpperCase()) {
                     final_arr.push(e);
                 }
             });
@@ -344,6 +345,10 @@ export const removeOptions = function(event) {
     }
 }
 
+export const traverseAutoComplete = function(event) {
+    console.log(event)
+}
+
 
 export const startPage = async function() {
 
@@ -362,6 +367,7 @@ export const startPage = async function() {
         $root.on('keyup', '.club-Name', clubDebouncer);
         $root.on('click', '.auto-option', optionSelect);
         $root.on('click', document, removeOptions);
+        $root.on('keydown', document, traverseAutoComplete);
     }
 
 };
