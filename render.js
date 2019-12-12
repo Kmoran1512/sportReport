@@ -307,7 +307,7 @@ export const clubDebouncer = async function(event) {
             });
 
             response.data.result.forEach(e => {
-                club_arr.push(e.clubNames)
+                if (e.clubNames != undefined) {club_arr.push(e.clubNames)}
             });
             
             club_arr.forEach(e => {
