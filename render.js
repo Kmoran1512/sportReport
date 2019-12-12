@@ -177,7 +177,7 @@ export const completeCoachSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "club name": clubName,
+                        "clubName": clubName,
                         "permission": "Coach",
                     }    
                 }
@@ -190,7 +190,7 @@ export const completeCoachSignUp = async function(event) {
                 url: "http://localhost:3000/public/clubs/",
                 data: {
                     "data": {
-                        clubNames: clubName,
+                        clubName: clubName,
                     },
                     "type": "merge"
                 }
@@ -234,13 +234,17 @@ export const toLogin = async function(event) {
                     "pass": psw,   
                 }
             });
-            console.log("s")
-            console.log(response)
+
+            let emailResponse = await axios({
+                method: 'GET',
+                url: "http://localhost:3000/public/clubs/" + response.data.data.clubName,
+            });
+
            
             document.location.href = "./calendarView.html";
             localStorage.setItem('jwtKey', response.data.jwt); //Save Login token locally
             localStorage.setItem('username', username); //Save username for when you are saved.
-            
+            localStorage.setItem('calendarEmail', emailResponse.data.result.email);            
 
         } catch (error) {
             console.log("e")

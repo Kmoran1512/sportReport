@@ -18,35 +18,13 @@
     <script src='./node_modules/axios/dist/axios.js'></script>
 
     <script>
-      
-      let getUserPermissions = async function(){
 
-        console.log(localStorage.getItem('username'));
-
-        let response = await axios({
-                    method: 'GET',
-                    headers: {
-                      'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
-                    },
-                    url: "http://localhost:3000/account/data/DataStore/" + localStorage.getItem('username'),
-          });
-
-          console.log(response);
-      
-       return response.result.data;
-      }
-
-      let userPermissions = getUserPermissions();
-
-      console.log(userPermissions);
-
-      var selectedDate = "";
-    
+      let selectedDate = "";
 
       document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');   
+        let calendarEl = document.getElementById('calendar');   
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        let calendar = new FullCalendar.Calendar(calendarEl, {
           plugins: [ 'dayGrid', 'interaction', 'googleCalendar'],
         
           height: $(document).height()-20,
@@ -56,7 +34,7 @@
          },
          googleCalendarApiKey: 'AIzaSyB4It3AW2oTsPwnNDXHQ1rIi_aqlJwpRAM',
         events: {
-            googleCalendarId: 'jerry11111cat@gmail.com',
+            googleCalendarId: localStorage.getItem("calendarEmail"),
         },
         customButtons: {
         addEventButton: {
@@ -79,6 +57,29 @@
         calendar.render();
         loadColor();
       });
+
+      let userPermissions;
+      let userClub;
+      
+      let getUserPermissions = async function(){
+
+        let response = await axios({
+                    method: 'GET',
+                    headers: {
+                      'Authorization': 'Bearer ' + localStorage.getItem('jwtKey'),
+                    },
+                    url: "http://localhost:3000/account/status" ,
+          }
+          );
+
+        let user = localStorage.getItem('username');
+                
+        userPermission = response.data.user.data.permission;
+        userClub = response.data.user.data.clubName;
+
+      }
+
+      getUserPermissions();
 
        // When the user clicks on <span> (x), close the modal
    let closeModal = function() {
@@ -200,6 +201,24 @@
       }
     }
 
+    async function submitCalendarEmail(){
+      if(userPermission == "Coach"){
+        response = await axios({
+                method: 'POST',
+                url: "http://localhost:3000/public/clubs/" + userClub,
+                data: {
+                  "data": {
+                    "email" : document.getElementById("calendarEmailTextArea").value,
+                  }, 
+                },
+        });
+
+        localStorage.setItem("calendarEmail",  document.getElementById("calendarEmailTextArea").value);
+        document.getElementById("myModal").style.display = "none";
+        location.reload();
+      }
+    }
+
 
     </script>
   </head>
@@ -216,10 +235,11 @@
       <p id = "calendarLinkText">2. Scroll down to access permissions</p>
       <p id = "calendarLinkText">3. Click the box make available to public</p>
       <p id = "calendarLinkText">4. Type in gmail email linked to the goolge calendar and press submit:</p>
+      <p id = "calendarLinkText">Warning: You must be a coach to change calendar</p>
 
       <form id=calendarInputWrapper>
         <input id=calendarEmailTextArea></input>
-        <button type="submit" id="calendarEmailButton">Submit</button>
+        <button type="button" id="calendarEmailButton" onclick=submitCalendarEmail()>Submit</button>
       </form>
       
       </div>
@@ -237,8 +257,6 @@
         </form>
       </div>
 
-<<<<<<< HEAD
-=======
 
         <div>
             <div class="color-slider-wrap">
@@ -264,7 +282,6 @@
             </div>
         </div>
         
->>>>>>> 2258373bc39d1e7cf1dd7a58d2abac5f604928b4
         <div id='calendar'></div>
         <script src="colorSlider.js"></script>
   </body>
