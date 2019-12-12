@@ -193,7 +193,7 @@ export const completeCoachSignUp = async function(event) {
                     "name": username,
                     "pass": pass,  
                     "data": {
-                        "club name": clubName,
+                        "clubName": clubName,
                         "permission": "Coach",
                     }    
                 }
