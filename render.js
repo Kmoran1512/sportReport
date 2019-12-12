@@ -207,13 +207,13 @@ export const completeCoachSignUp = async function(event) {
 
             response = await axios({
                 method: 'POST',
-                url: "http://localhost:3000/public/clubs/",
+                url: "http://localhost:3000/public/clubs/" + clubName,
                 data: {
                     "data": {
-                        clubNames: clubName,
-                    },
-                    "type": "merge"
-                }
+                        "email": "0"
+                    }
+                },
+                type: "merge"
             });
 
             console.log("hi2")
